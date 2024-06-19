@@ -1,0 +1,5 @@
+CodePRO LK is an educational platform offering a wide range of online courses primarily focused on programming and machine learning. All courses are provided for free and are delivered in Sinhala, catering specifically to the Sri Lankan audience. The platform includes various learning materials such as videos, quizzes, and assignments to enhance the learning experience​​.
+
+Some of the featured courses on CodePRO LK include "Python GUI – Tkinter," "Machine Learning Project – Sentiment Analysis," and "Data Structures and Algorithms." These courses range from beginner to intermediate levels, making them accessible to a broad spectrum of learners​.
+
+In addition to the courses, CodePRO LK also offers projects and resources to support learners in applying their knowledge practically. The platform emphasizes providing high-quality education to empower the next generation of Sri Lankans in the tech field​​.
