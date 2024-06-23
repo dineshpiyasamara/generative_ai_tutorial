@@ -13,7 +13,6 @@ load_dotenv()
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
 os.environ["LANGCHAIN_API_KEY"] = os.getenv("LANGCHAIN_API_KEY")
 
-
 app = FastAPI(
     title="Chatbot",
     version="1.0",
@@ -27,28 +26,39 @@ parser = StrOutputParser()
 
 @app.get("/")
 async def index():
-    return {"result": "Hello World"}
+    return {"result": "Welcome to CodePRO LK"}
 
 
-@app.post("/chatbot/")
+@app.post("api/chatbot/")
 async def chatbot(chat_req: ChatReq):
     global history
-    question = chat_req.question
 
-    prompt = get_prompt()
+    response_data = {
+        "status": "fail",
+        "response": ""
+    }
 
-    chain = prompt | llm | parser
+    try:
+        question = chat_req.question
 
-    history = history[-4:]
+        prompt = get_prompt()
 
-    response = chain.invoke({"history": history, "question": [
-                            HumanMessage(content=question)]})
+        chain = prompt | llm | parser
 
-    history.extend([HumanMessage(content=question),
-                   AIMessage(content=response)])
+        history = history[-4:]
 
-    return {"result": response}
+        response = chain.invoke({"history": history, "question": [
+                                HumanMessage(content=question)]})
 
+        history.extend([HumanMessage(content=question),
+                        AIMessage(content=response)])
+
+        response_data["response"] = response
+        response_data["status"] = "success"
+        return response_data
+    except Exception as e:
+        response_data["response"] = str(e)
+        return response_data
 
 if __name__ == "__main__":
     uvicorn.run(app, host="localhost", port=8000)
