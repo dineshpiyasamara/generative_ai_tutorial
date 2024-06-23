@@ -6,6 +6,7 @@ from prompt import get_prompt
 from entity import ChatReq
 import uvicorn
 import os
+from logger import logging
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -18,46 +19,60 @@ app = FastAPI(
     version="1.0",
     decsription="A simple chatbot API server using OpenAI and LangChain"
 )
+logging.info("initialized FastAPI server")
 
 history = []
+
 llm = get_llm()
+logging.info("initialized LLM")
+
 parser = StrOutputParser()
+logging.info("initialized output parser")
 
 
 @app.get("/")
 async def index():
-    return {"result": "Welcome to CodePRO LK"}
+    response_data = {
+        "status": "success",
+        "response": "Welcome to CodePRO LK"
+    }
+    return response_data
 
 
-@app.post("api/chatbot/")
+@app.post("/api/chatbot")
 async def chatbot(chat_req: ChatReq):
     global history
 
+    question = chat_req.question
+    logging.info(f"Question: {question}")
+
     response_data = {
-        "status": "fail",
+        "status": "success",
         "response": ""
     }
 
     try:
-        question = chat_req.question
-
         prompt = get_prompt()
+        logging.info("Load prompt template")
 
         chain = prompt | llm | parser
+        logging.info("Create chain")
 
         history = history[-4:]
 
         response = chain.invoke({"history": history, "question": [
                                 HumanMessage(content=question)]})
+        logging.info(f"Response: {response}")
 
         history.extend([HumanMessage(content=question),
                         AIMessage(content=response)])
 
         response_data["response"] = response
-        response_data["status"] = "success"
         return response_data
     except Exception as e:
+        logging.error(f"Error: {str(e)}")
         response_data["response"] = str(e)
+        response_data["status"] = "fail"
         return response_data
 
 if __name__ == "__main__":
