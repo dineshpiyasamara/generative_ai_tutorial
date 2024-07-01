@@ -1,1 +1,1 @@
-# LangChain Tutorial
+# GenerativeAI Tutorial
