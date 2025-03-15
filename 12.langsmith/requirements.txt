@@ -1,0 +1,8 @@
+langchain
+langchain-openai
+langchain-chroma
+python-dotenv
+pypdf
+fastapi
+uvicorn
+langchain_community
